@@ -1,13 +1,109 @@
-Collaborative Rhythm Composer🎵 Project DescriptionThis project is a Java-based desktop application for creating and sharing musical rhythms in real-time. It's designed for seamless collaboration, allowing multiple users to compose together, no matter their setup.The application is containerized using Docker, which simplifies deployment and allows for multiple instances to run consistently across different environments. The user interface is built with Java Swing and is rendered on the host system using XQuartz, enabling a full graphical experience even when the application is running inside a Docker container.At its core, the application provides an interactive and engaging music creation experience. Users can compose rhythms using a variety of beats and instantly hear their creations. This is powered by the Java MIDI API, which grants precise control over the system's MIDI hardware for high-quality playback.Collaboration is a key feature. Users can broadcast their musical patterns to others through a central server. This server is built with a multi-threaded architecture, assigning a dedicated thread to each user's SocketChannel connection to ensure efficient, real-time communication and synchronization between all collaborators. When a user creates a beat, the server serializes this data and sends it to all connected clients, who then deserialize it and update their state, keeping everyone perfectly in sync.✨ FeaturesIntuitive Rhythm Composer: Easily create and edit musical patterns with a user-friendly interface.Real-time MIDI Playback: Hear your compositions instantly through your system's MIDI setup.Live Collaboration: Share your music with others in real-time. See and hear changes from collaborators as they happen.Centralized Server: A robust, multi-threaded server that manages connections and ensures smooth data flow.Containerized Deployment: Run client instances easily and consistently using Docker.⚙️ ArchitectureThe application uses a client-server model:Client: A Java Swing desktop application where users compose music. It can be run directly from an IDE or as a Docker container. It communicates with the server to send and receive musical data.Server: A central Java application that handles all client connections. It's multi-threaded, creating a new thread for each client to manage their SocketChannel. The server is responsible for broadcasting messages from one client to all other connected clients, ensuring everyone remains synchronized.A high-level overview of the application's architecture.🚀 Getting StartedFollow these instructions to get the application up and running on your local machine.PrerequisitesmacOS: This application is configured to run on macOS.XQuartz: Required to display the UI from the Docker container.Download and install XQuartz.Java Development Kit (JDK): Version 8 or later.IDE: An IDE that supports Java, like IntelliJ IDEA, Eclipse, or VS Code.Docker: The latest version of Docker for Mac.Install Docker Desktop for Mac.1. Running Locally (For Development)This method is ideal for development and testing.Configure XQuartz:Open the Terminal application.Run the following command to allow local applications to connect to the X server:xhost +localhost
-In XQuartz settings, navigate to the "Output" preferences and set the "Colors" option to 256 colors.Set Up the Project:Clone or download this repository.Import the project into your preferred Java IDE.Launch the Server:Locate the Server.java file in the project.Run this file to start the central server.Launch a Client:Locate the Client.java file.Run this file to launch an instance of the client application.2. Running with Docker (For Deployment)This method uses Docker to run client instances, which is great for easy deployment and isolation.Ensure Prerequisites are Met:Make sure Docker is running.Make sure you have configured XQuartz as described in the local setup (i.e., run xhost +localhost).Crucially, ensure the server application (Server.java) is already running on your host machine.Pull the Docker Image:Open your terminal.Pull the latest client image from Docker Hub with the following command:docker pull ak472003/java-client-five-without-midi:latest
-Note: The :latest tag is optional. If you omit it, Docker will pull the image tagged as latest by default.Run a Client Instance:Each time you run the following command, a new, containerized client instance will be launched. This command names the container (e.g., client102), sets the necessary display and network variables, and connects it to your host's X server for UI rendering.docker run --name client102 \
--e DISPLAY=host.docker.internal:0 \
--e SERVER_HOST=host.docker.internal \
--v /tmp/.X11-unix:/tmp/.X11-unix \
-ak472003/java-client-five-without-midi
-To run another client, use a different name:docker run --name client103 \
--e DISPLAY=host.docker.internal:0 \
--e SERVER_HOST=host.docker.internal \
--v /tmp/.X11-unix:/tmp/.X11-unix \
-ak472003/java-client-five-without-midi
-🤝 Collaboration WorkflowOne user starts the Server.java application on their machine.Multiple users can then connect by starting their Client.java application (either locally or via Docker).When one user adds or changes a beat, the action is sent to the server.The server immediately broadcasts this change to all other connected clients.All clients receive the update and refresh their UI and playback, ensuring everyone stays in sync.🛠️ Technology StackCore Language: JavaUser Interface: Java SwingNetworking: Java Sockets (SocketChannel)Audio: Java MIDI APIContainerization: DockerUI Display for Containers: XQuartz
+# **Collaborative Rhythm Composer**
+
+## **🎵 Project Description**
+
+This project is a Java-based desktop application for creating and sharing musical rhythms in real-time. It's designed for seamless collaboration, allowing multiple users to compose together, no matter their setup.
+
+The application is containerized using **Docker**, which simplifies deployment and allows for multiple instances to run consistently across different environments. The user interface is built with **Java Swing** and is rendered on the host system using **XQuartz**, enabling a full graphical experience even when the application is running inside a Docker container.
+
+At its core, the application provides an interactive and engaging music creation experience. Users can compose rhythms using a variety of beats and instantly hear their creations. This is powered by the **Java MIDI API**, which grants precise control over the system's MIDI hardware for high-quality playback.
+
+Collaboration is a key feature. Users can broadcast their musical patterns to others through a central server. This server is built with a multi-threaded architecture, assigning a dedicated thread to each user's SocketChannel connection to ensure efficient, real-time communication and synchronization between all collaborators. When a user creates a beat, the server serializes this data and sends it to all connected clients, who then deserialize it and update their state, keeping everyone perfectly in sync.
+
+## **✨ Features**
+
+* **Intuitive Rhythm Composer:** Easily create and edit musical patterns with a user-friendly interface.  
+* **Real-time MIDI Playback:** Hear your compositions instantly through your system's MIDI setup.  
+* **Live Collaboration:** Share your music with others in real-time. See and hear changes from collaborators as they happen.  
+* **Centralized Server:** A robust, multi-threaded server that manages connections and ensures smooth data flow.  
+* **Containerized Deployment:** Run client instances easily and consistently using Docker.
+
+## **⚙️ Architecture**
+
+The application uses a client-server model:
+
+* **Client:** A Java Swing desktop application where users compose music. It can be run directly from an IDE or as a Docker container. It communicates with the server to send and receive musical data.  
+* **Server:** A central Java application that handles all client connections. It's multi-threaded, creating a new thread for each client to manage their SocketChannel. The server is responsible for broadcasting messages from one client to all other connected clients, ensuring everyone remains synchronized.
+
+*A high-level overview of the application's architecture.*
+
+## **🚀 Getting Started**
+
+Follow these instructions to get the application up and running on your local machine.
+
+### **Prerequisites**
+
+* **macOS:** This application is configured to run on macOS.  
+* **XQuartz:** Required to display the UI from the Docker container.  
+  * [Download and install XQuartz](https://www.xquartz.org/).  
+* **Java Development Kit (JDK):** Version 8 or later.  
+* **IDE:** An IDE that supports Java, like IntelliJ IDEA, Eclipse, or VS Code.  
+* **Docker:** The latest version of Docker for Mac.  
+  * [Install Docker Desktop for Mac](https://www.docker.com/products/docker-desktop/).
+
+### **1\. Running Locally (For Development)**
+
+This method is ideal for development and testing.
+
+1. **Configure XQuartz:**  
+   * Open the Terminal application.  
+   * Run the following command to allow local applications to connect to the X server:  
+     xhost \+localhost
+
+   * In XQuartz settings, navigate to the "Output" preferences and set the "Colors" option to 256 colors.  
+2. **Set Up the Project:**  
+   * Clone or download this repository.  
+   * Import the project into your preferred Java IDE.  
+3. **Launch the Server:**  
+   * Locate the Server.java file in the project.  
+   * Run this file to start the central server.  
+4. **Launch a Client:**  
+   * Locate the Client.java file.  
+   * Run this file to launch an instance of the client application.
+
+### **2\. Running with Docker (For Deployment)**
+
+This method uses Docker to run client instances, which is great for easy deployment and isolation.
+
+1. **Ensure Prerequisites are Met:**  
+   * Make sure Docker is running.  
+   * Make sure you have configured XQuartz as described in the local setup (i.e., run xhost \+localhost).  
+   * **Crucially, ensure the server application (Server.java) is already running on your host machine.**  
+2. **Pull the Docker Image:**  
+   * Open your terminal.  
+   * Pull the latest client image from Docker Hub with the following command:  
+     docker pull ak472003/java-client-five-without-midi:latest
+
+**Note:** The :latest tag is optional. If you omit it, Docker will pull the image tagged as latest by default.
+
+3. **Run a Client Instance:**  
+   * Each time you run the following command, a new, containerized client instance will be launched. This command names the container (e.g., client102), sets the necessary display and network variables, and connects it to your host's X server for UI rendering.  
+     docker run \--name client102 \\  
+       \-e DISPLAY=host.docker.internal:0 \\  
+       \-e SERVER\_HOST=host.docker.internal \\  
+       \-v /tmp/.X11-unix:/tmp/.X11-unix \\  
+       ak472003/java-client-five-without-midi
+
+   * To run another client, use a different name:  
+     docker run \--name client103 \\  
+       \-e DISPLAY=host.docker.internal:0 \\  
+       \-e SERVER\_HOST=host.docker.internal \\  
+       \-v /tmp/.X11-unix:/tmp/.X11-unix \\  
+       ak472003/java-client-five-without-midi
+
+## **🤝 Collaboration Workflow**
+
+1. One user starts the Server.java application on their machine.  
+2. Multiple users can then connect by starting their Client.java application (either locally or via Docker).  
+3. When one user adds or changes a beat, the action is sent to the server.  
+4. The server immediately broadcasts this change to all other connected clients.  
+5. All clients receive the update and refresh their UI and playback, ensuring everyone stays in sync.
+
+## **🛠️ Technology Stack**
+
+* **Core Language:** Java  
+* **User Interface:** Java Swing  
+* **Networking:** Java Sockets (SocketChannel)  
+* **Audio:** Java MIDI API  
+* **Containerization:** Docker  
+* **UI Display for Containers:** XQuartz
